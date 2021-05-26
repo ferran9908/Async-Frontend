@@ -1,24 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import { io } from "socket.io-client";
+import Join from "./containers/Join/Join";
+import Player from "./containers/Player/Player";
+
+const BASE_URL = process.env.REACT_APP_BASE_URL as string;
+export const socket = io(BASE_URL);
 
 function App() {
+  const [joined, setJoined] = useState(false);
+  const [file, setFile] = useState("");
+  const [userName, setUserName] = useState("");
+  const [room, setRoom] = useState("");
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {!joined ? (
+        <Join
+          joined={joined}
+          file={file}
+          setJoined={setJoined}
+          setFile={setFile}
+          userName={userName}
+          room={room}
+          setUserName={setUserName}
+          setRoom={setRoom}
+        />
+      ) : (
+        <Player file={file} userName={userName} room={room} />
+      )}
     </div>
   );
 }
