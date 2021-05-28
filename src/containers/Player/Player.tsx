@@ -10,13 +10,17 @@ const Player: FC<Props> = ({ file, userName, room }) => {
   const [playing, setPlaying] = useState(false);
   const [jumpTo, setJumpTo] = useState<number>();
   const [shouldSeek, setShouldSeek] = useState(true);
+  const [shouldPause, setShouldPause] = useState(true);
+  const [shouldPlay, setShouldPlay] = useState(true);
   const player = useRef<any>();
   useEffect(() => {
     socket.on("_PAUSE", () => {
+      setShouldPause(false);
       setPlaying(false);
     });
 
     socket.on("_PLAY", () => {
+      setShouldPlay(true);
       setPlaying(true);
     });
 
@@ -39,10 +43,14 @@ const Player: FC<Props> = ({ file, userName, room }) => {
           url={file}
           controls
           onPause={() => {
-            socket.emit("PAUSE", { user: userName });
+            if (shouldPause) socket.emit("PAUSE", { user: userName });
+            else setShouldPause(true);
+            console.log("PAUSING HERE");
           }}
           onPlay={() => {
-            socket.emit("PLAY", { user: userName });
+            if (shouldPlay) socket.emit("PLAY", { user: userName });
+            else setShouldPlay(true);
+            console.log("PLAYING HERE");
           }}
           onProgress={(progress) => {
             setJumpTo(progress.playedSeconds);
