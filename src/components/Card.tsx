@@ -10,6 +10,4 @@ const Card: FC<Props> = ({ children }) => {
   );
 };
 
-interface Props {}
-
 export default Card;
